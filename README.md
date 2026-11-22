@@ -38,7 +38,10 @@ Costa Rica Conecta soluciona este problema centralizando en un mismo portal web 
 ------------------------------------------------------------------------
 
 3. DIAGRAMAS DE SECUENCIA UML (MERMAID)
+
 3.1 Mantenimiento de Usuarios y Perfiles - Persona 1
+
+<img width="7805" height="3745" alt="diagrama-persona 1" src="https://github.com/user-attachments/assets/d291ba35-b742-4a40-8f99-e3cd8ede6a7d" />
 
 
 
