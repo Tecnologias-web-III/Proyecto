@@ -133,7 +133,7 @@ export function DashboardPage() {
       <section className="dashboard-hero">
         <div className="hero-copy">
           <h1>
-            Bienvenido, {userData?.nombre || user?.displayName || "Ciudadano"}
+            Bienvenido/a, {userData?.nombre || user?.displayName || "Ciudadano"}
           </h1>
           <p>
             Gestiona reportes ciudadanos, salud nutricional, medicamentos y
