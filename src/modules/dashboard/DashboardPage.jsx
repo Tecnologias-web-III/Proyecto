@@ -4,10 +4,10 @@ import { collection, getCountFromServer, query, where } from "firebase/firestore
 import { db } from "../../config/firebaseConfig";
 import { useAuth } from "../auth/AuthContext";
 import imagenHero from "../../../images/San José.jpg";
-import imagenInfraestructura from "../../../images/Alajuela.jpg";
-import imagenNutricion from "../../../images/Cartago.jpg";
-import imagenMedicamentos from "../../../images/Heredia.jpg";
-import imagenTramites from "../../../images/Puntarenas.jpg";
+import imagenInfraestructura from "../../../images/Infraestructura.jpg";
+import imagenNutricion from "../../../images/seguro.webp";
+import imagenMedicamentos from "../../../images/medicamentos.jpg";
+import imagenTramites from "../../../images/tramites.jpg";
 
 export function DashboardPage() {
   const { user, userData } = useAuth();

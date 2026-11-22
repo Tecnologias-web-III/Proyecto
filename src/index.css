@@ -1305,16 +1305,17 @@ select:focus-visible {
 .team-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem;
+  justify-content: center;
+  gap: 0.85rem;
 }
 
 .team-pill {
   display: inline-flex;
-  min-height: 46px;
-  flex: 1 1 250px;
+  min-height: 56px;
+  flex: 0 0 auto;
   align-items: center;
   gap: 0.55rem;
-  max-width: 390px;
+  width: auto;
   padding: 0.4rem 0.65rem 0.4rem 0.4rem;
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -1342,6 +1343,7 @@ select:focus-visible {
   color: var(--text);
   font-size: 0.8rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .team-pill-area {
@@ -1645,34 +1647,6 @@ select:focus-visible {
     border-radius: 16px;
   }
 
-  .team-pills {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .team-pill {
-    display: grid;
-    grid-template-columns: 32px minmax(0, 1fr);
-    column-gap: 0.6rem;
-    row-gap: 0.15rem;
-    width: 100%;
-    max-width: none;
-  }
-
-  .team-pill-avatar {
-    grid-row: span 2;
-  }
-
-  .team-pill-name,
-  .team-pill-area {
-    grid-column: 2;
-  }
-
-  .team-pill-area {
-    justify-self: start;
-    margin-left: 0;
-  }
-
   .footer-grid {
     padding: 2rem 1rem;
     grid-template-columns: minmax(0, 1fr);
@@ -1768,5 +1742,160 @@ select:focus-visible {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+}
+
+@media (min-width: 901px) {
+  .auth-split-layout {
+    height: 100vh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .auth-form-panel,
+  .auth-visual-panel {
+    min-height: 0;
+  }
+
+  .auth-split-layout.reverse .auth-form-panel {
+    padding: 1.25rem 2rem;
+  }
+
+  .auth-split-layout.reverse .auth-title-block {
+    margin-bottom: 0.9rem;
+  }
+
+  .auth-split-layout.reverse .form-stack {
+    gap: 0.65rem;
+  }
+
+  .auth-split-layout.reverse .form-group input {
+    padding: 0.55rem 0.75rem;
+  }
+
+  .auth-split-layout.reverse .divider {
+    margin: 0.7rem 0;
+  }
+
+  .auth-split-layout.reverse .auth-footer {
+    margin-top: 0.85rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .auth-split-layout {
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .auth-visual-panel {
+    height: 190px;
+    min-height: 190px;
+    padding: 1.25rem;
+  }
+
+  .auth-form-panel {
+    width: 100%;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .auth-form-box {
+    max-width: 440px;
+  }
+
+  .auth-split-layout .form-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .btn-google {
+    min-height: 46px;
+  }
+}
+
+@media (max-width: 768px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .app-shell,
+  .main-content,
+  .page-container,
+  .navbar-inner,
+  .footer-grid,
+  .auth-split-layout,
+  .auth-form-panel,
+  .auth-visual-panel {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .page-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .dashboard-hero,
+  .metrics-grid,
+  .modules-grid,
+  .about-grid,
+  .overview-grid,
+  .footer-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dashboard-hero {
+    min-width: 0;
+  }
+
+  .metric-card,
+  .module-card,
+  .about-pillar-card,
+  .profile-card {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .profile-card {
+    width: 100%;
+  }
+
+  .footer-grid {
+    padding: 2rem 1rem;
+  }
+}
+
+@media (max-width: 599px) {
+  .team-pill {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .team-pill-name,
+  .team-pill-area {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-carousel-content p {
+    display: none;
+  }
+
+  .profile-avatar-section {
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .navbar-inner {
+    column-gap: 0.5rem;
+  }
+
+  .navbar-brand {
+    min-width: 0;
   }
 }
