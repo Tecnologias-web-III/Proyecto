@@ -26,27 +26,27 @@ export function AboutPage() {
     {
       iniciales: "YR",
       nombre: "Yul Reyes Tapia",
-      area: "Arquitectura y Usuarios",
-    },
-    {
-      iniciales: "KU",
-      nombre: "Kristel Ugalde Amador",
-      area: "Infraestructura",
-    },
-    {
-      iniciales: "EG",
-      nombre: "Esmeralda Gonzalez Cordoba",
-      area: "Nutrición",
-    },
-    {
-      iniciales: "MM",
-      nombre: "Maria Murillo Chaves",
-      area: "Medicamentos",
+      area: "Arquitectura Base, Usuarios y Dashboard",
     },
     {
       iniciales: "NS",
       nombre: "Nailea Soto Gonzalez",
-      area: "Trámites",
+      area: "Infraestructura Cantonal y Especialistas",
+    },
+    {
+      iniciales: "EG",
+      nombre: "Esmeralda Gonzalez Cordoba",
+      area: "Nutrición, Hidratación y Notificaciones",
+    },
+    {
+      iniciales: "KU",
+      nombre: "Kristel Ugalde Amador",
+      area: "Medicamentos, Emergencia y Farmacias",
+    },
+    {
+      iniciales: "MM",
+      nombre: "Maria Murillo Chaves",
+      area: "Historial de Tomas y Trámites",
     },
   ];
 
