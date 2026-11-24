@@ -58,6 +58,7 @@ Costa Rica Conecta soluciona este problema centralizando en un mismo portal web 
 
 
 3.5 Proceso Principal: Gestión de Trámites Comunitarios - Persona 5
+<img width="2755" height="2886" alt="Diagrama - Persona5" src="https://github.com/user-attachments/assets/df9cfc54-c11e-4a72-8942-07f7b75f6e5a" />
 
 
 ------------------------------------------------------------------------
