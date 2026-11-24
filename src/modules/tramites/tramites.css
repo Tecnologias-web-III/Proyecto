@@ -1,0 +1,40 @@
+.tramites-page h1 {
+  color: var(--primary-dark);
+  margin-bottom: 0.4rem;
+}
+
+.tramites-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.tramites-filtros label {
+  display: grid;
+  flex: 1 1 12rem;
+  max-width: 18rem;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+.tramites-filtros select {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.tramites-resultados {
+  margin-top: 1.25rem;
+  color: var(--text-muted);
+}
+
+.tramites-tabla {
+  overflow-x: auto;
+}
+
+.tramites-tabla td:first-child {
+  white-space: nowrap;
+}

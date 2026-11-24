@@ -12,6 +12,7 @@ import { RegisterPage } from "./modules/auth/RegisterPage";
 import { ProfilePage } from "./modules/auth/ProfilePage";
 import { DashboardPage } from "./modules/dashboard/DashboardPage";
 import { AboutPage } from "./modules/dashboard/AboutPage";
+import TramitesListPage from "./modules/tramites/TramitesListPage";
 import { Navbar } from "./shared/components/Navbar";
 import { Footer } from "./shared/components/Footer";
 
@@ -116,11 +117,7 @@ function AppLayout() {
             path="/tramites"
             element={
               <ProtectedRoute>
-                <ModuloEnDesarrollo
-                  titulo="Historial de Tomas y Proceso Principal de Trámites Comunitarios"
-                  responsable="Asignado a Perfil 5"
-                  descripcion="Bitácora diaria de medicamentos y ciclo transaccional completo de atención comunitaria con exportación a PDF."
-                />
+                <TramitesListPage />
               </ProtectedRoute>
             }
           />
