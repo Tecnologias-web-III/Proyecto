@@ -50,6 +50,7 @@ Costa Rica Conecta soluciona este problema centralizando en un mismo portal web 
 
 
 3.3 Mantenimiento de Salud y Seguimiento Nutricional - Persona 3
+<img width="8192" height="3624" alt="diagrama-persona 3" src="https://github.com/user-attachments/assets/38434ac8-07b1-4228-8b82-5a37197fa57b" />
 
 
 
