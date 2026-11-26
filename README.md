@@ -47,6 +47,7 @@ Costa Rica Conecta soluciona este problema centralizando en un mismo portal web 
 
 3.2 Mantenimiento de Infraestructura Cantonal - Persona 2
 
+<img width="5955" height="6625" alt="Untitled diagram-2026-11-26-000753" src="https://github.com/user-attachments/assets/50616ebe-3985-4775-943b-8395dfea93f1" />
 
 
 3.3 Mantenimiento de Salud y Seguimiento Nutricional - Persona 3
