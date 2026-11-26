@@ -57,6 +57,7 @@ Costa Rica Conecta soluciona este problema centralizando en un mismo portal web 
 
 3.4 Mantenimiento de Control de Medicamentos - Persona 4
 
+<img width="6437" height="5925" alt="Medicamentos Stock Crítico Flow-2026-11-26-004911" src="https://github.com/user-attachments/assets/66caef9f-f834-46ac-9834-5a0a72a4762d" />
 
 
 3.5 Proceso Principal: Gestión de Trámites Comunitarios - Persona 5
