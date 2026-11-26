@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { initializeFirestore } from "firebase/firestore";
+import { getMessaging, isSupported } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -17,5 +18,11 @@ const googleProvider = new GoogleAuthProvider();
 const db = initializeFirestore(app, {
   experimentalForceLongPolling: true,
 });
+const messaging = isSupported()
+  .then((supported) => (supported ? getMessaging(app) : null))
+  .catch((error) => {
+    console.error("No se pudo inicializar Firebase Messaging:", error);
+    return null;
+  });
 
-export { app, auth, googleProvider, db };
+export { app, auth, googleProvider, db, messaging };

@@ -1,0 +1,49 @@
+:root {
+  --bg-page: #eef3f7;
+  --bg-surface: #ffffff;
+  --bg-tint: #f3f7fa;
+  --bg-input: #f3f7fa;
+  --bg-sage: #e1f2ee;
+  --primary: #114b72;
+  --primary-dark: #0b3552;
+  --primary-soft: #e3eef6;
+  --primary-accent: #327590;
+  --secondary: #137a6b;
+  --secondary-dark: #0e5c50;
+  --secondary-soft: #e1f2ee;
+  --secondary-accent: #319082;
+  --report-blue: var(--primary);
+  --report-soft: var(--primary-soft);
+  --health-green: var(--secondary);
+  --health-soft: var(--secondary-soft);
+  --medicine-blue: #285d7a;
+  --medicine-soft: #e6f0f5;
+  --process-green: var(--secondary-dark);
+  --process-soft: var(--secondary-soft);
+  --text-main: #132638;
+  --text-muted: #516475;
+  --border: #d8e2ea;
+  --input-border: #cfdbe5;
+  --danger: #0b3552;
+  --success: #137a6b;
+  --accent: var(--secondary);
+  --shadow-card: 0 6px 20px rgba(17, 75, 114, 0.06);
+  --bg: var(--bg-page);
+  --surface: var(--bg-surface);
+  --text: var(--text-main);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-width: 320px;
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+

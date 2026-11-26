@@ -1,0 +1,76 @@
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
+html,
+body,
+#root,
+.app-shell,
+.app-layout {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  font-family: "Inter", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3.35rem);
+}
+
+h2 {
+  font-size: clamp(1.55rem, 2.6vw, 2.25rem);
+}
+
+h3 {
+  font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+}
+
+h4 {
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(19, 122, 107, 0.3);
+  outline-offset: 3px;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+

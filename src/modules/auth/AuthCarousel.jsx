@@ -1,61 +1,33 @@
 import { useEffect, useState } from "react";
-import imagenSanJose from "../../../images/San José.jpg";
-import imagenAlajuela from "../../../images/Alajuela.jpg";
-import imagenCartago from "../../../images/Cartago.jpg";
-import imagenHeredia from "../../../images/Heredia.jpg";
-import imagenGuanacaste from "../../../images/Guanacaste.jpg";
-import imagenPuntarenas from "../../../images/Puntarenas.jpg";
-import imagenLimon from "../../../images/Limon.jpg";
 
 const SLIDES = [
   {
     provincia: "San José",
-    imagen: imagenSanJose,
-    titulo: "Participación ciudadana",
-    descripcion:
-      "Conecta con los servicios de tu comunidad y ayuda a mejorar los espacios públicos.",
+    imagen: "/img/San José.jpg",
   },
   {
     provincia: "Alajuela",
-    imagen: imagenAlajuela,
-    titulo: "Bienestar para cada comunidad",
-    descripcion:
-      "Encuentra herramientas para dar seguimiento a tu salud y bienestar cotidiano.",
+    imagen: "/img/Alajuela.jpg",
   },
   {
     provincia: "Cartago",
-    imagen: imagenCartago,
-    titulo: "Salud más cercana",
-    descripcion:
-      "Organiza tus citas y metas de bienestar desde un espacio pensado para las personas.",
+    imagen: "/img/Cartago.jpg",
   },
   {
     provincia: "Heredia",
-    imagen: imagenHeredia,
-    titulo: "Comunidades conectadas",
-    descripcion:
-      "Comparte necesidades locales y mantente al tanto de los servicios comunitarios.",
+    imagen: "/img/Heredia.jpg",
   },
   {
     provincia: "Guanacaste",
-    imagen: imagenGuanacaste,
-    titulo: "Cuidar también es participar",
-    descripcion:
-      "Accede a recursos de salud, nutrición y bienestar para acompañar tu día a día.",
+    imagen: "/img/Guanacaste.jpg",
   },
   {
     provincia: "Puntarenas",
-    imagen: imagenPuntarenas,
-    titulo: "Servicios para el bienestar",
-    descripcion:
-      "Da seguimiento a tus gestiones y encuentra información útil para tu comunidad.",
+    imagen: "/img/Puntarenas.jpg",
   },
   {
     provincia: "Limón",
-    imagen: imagenLimon,
-    titulo: "Una Costa Rica más conectada",
-    descripcion:
-      "Costa Rica Conecta reúne participación ciudadana, salud y bienestar en un solo lugar.",
+    imagen: "/img/Limon.jpg",
   },
 ];
 
@@ -78,7 +50,7 @@ export function AuthCarousel() {
       {imagenDisponible && (
         <img
           src={slideActual.imagen}
-          alt={slideActual.titulo}
+          alt={`Paisaje de ${slideActual.provincia}`}
           className="auth-carousel-image"
           onError={() =>
             setErroresImg((prev) => ({
@@ -91,21 +63,19 @@ export function AuthCarousel() {
       <div className="auth-carousel-overlay" />
 
       <div className="auth-carousel-content">
-        <span className="auth-brand-mark">Costa Rica Conecta</span>
-        <span className="auth-province">{slideActual.provincia}</span>
-        <h2>{slideActual.titulo}</h2>
-        <p>{slideActual.descripcion}</p>
-
-        <div className="auth-carousel-dots" role="tablist" aria-label="Diapositivas">
-          {SLIDES.map((slide, idx) => (
-            <button
-              key={slide.titulo}
-              type="button"
-              className={`carousel-dot ${idx === indice ? "active" : ""}`}
-              onClick={() => setIndice(idx)}
-              aria-label={`Ver imagen ${idx + 1}`}
-            />
-          ))}
+        <div className="auth-carousel-indicator">
+          <span className="auth-province">{slideActual.provincia}</span>
+          <div className="auth-carousel-dots" role="tablist" aria-label="Provincias">
+            {SLIDES.map((slide, idx) => (
+              <button
+                key={slide.provincia}
+                type="button"
+                className={`carousel-dot ${idx === indice ? "active" : ""}`}
+                onClick={() => setIndice(idx)}
+                aria-label={`Ver provincia ${slide.provincia}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </aside>

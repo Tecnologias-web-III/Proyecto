@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { auth, db, googleProvider } from "../../config/firebaseConfig";
 import { AuthCarousel } from "./AuthCarousel";
 import { GoogleIcon } from "../../shared/components/GoogleIcon";
@@ -10,6 +11,7 @@ export function LoginPage() {
   const navigate = useNavigate();
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
+  const [mostrarPassword, setMostrarPassword] = useState(false);
   const [error, setError] = useState("");
   const [cargando, setCargando] = useState(false);
 
@@ -70,17 +72,73 @@ export function LoginPage() {
   };
 
   return (
-    <div className="auth-split-layout">
+    <div className="auth-split-layout auth-fullscreen-wrapper login-page">
       <AuthCarousel />
 
       <section className="auth-form-panel">
         <div className="auth-form-box">
+          <div className="auth-card-brand">
+            <img src="/img/Favicon.png" alt="" className="brand-logo" />
+          </div>
           <div className="auth-title-block">
-            <h1>Iniciar sesión</h1>
-            <p>Ingresa tus datos para acceder a Costa Rica Conecta</p>
+            <h1>Costa Rica Conecta</h1>
+            <p>Ingresa a tu cuenta para continuar.</p>
           </div>
 
           {error && <div className="alert-error">{error}</div>}
+
+          <form onSubmit={handleLoginCorreo} className="form-stack">
+            <div className="form-group">
+              <label htmlFor="correo">Correo electrónico</label>
+              <div className="auth-input-wrap">
+                <Mail className="auth-input-icon" size={18} aria-hidden="true" />
+                <input
+                  id="correo"
+                  type="email"
+                  value={correo}
+                  onChange={(e) => setCorreo(e.target.value)}
+                  placeholder="tu-correo@ejemplo.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Contraseña</label>
+              <div className="auth-input-wrap">
+                <LockKeyhole className="auth-input-icon" size={18} aria-hidden="true" />
+                <input
+                  id="password"
+                  type={mostrarPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Ingresa tu contraseña"
+                  required
+                />
+                <button
+                  type="button"
+                  className="auth-password-toggle"
+                  onClick={() => setMostrarPassword((mostrar) => !mostrar)}
+                  aria-label={mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  aria-pressed={mostrarPassword}
+                >
+                  {mostrarPassword ? (
+                    <EyeOff size={18} aria-hidden="true" />
+                  ) : (
+                    <Eye size={18} aria-hidden="true" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" className="btn-primary" disabled={cargando}>
+              {cargando ? "Verificando..." : "Iniciar sesión"}
+            </button>
+          </form>
+
+          <div className="divider">
+            <span>O continúa con Google</span>
+          </div>
 
           <button
             type="button"
@@ -91,40 +149,6 @@ export function LoginPage() {
             <GoogleIcon />
             <span>Continuar con Google</span>
           </button>
-
-          <div className="divider">
-            <span>o ingresa con tu correo</span>
-          </div>
-
-          <form onSubmit={handleLoginCorreo} className="form-stack">
-            <div className="form-group">
-              <label htmlFor="correo">Correo electrónico</label>
-              <input
-                id="correo"
-                type="email"
-                value={correo}
-                onChange={(e) => setCorreo(e.target.value)}
-                placeholder="valeria.mora@correo.com"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="password">Contraseña</label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Ingresa tu contraseña"
-                required
-              />
-            </div>
-
-            <button type="submit" className="btn-primary" disabled={cargando}>
-              {cargando ? "Verificando..." : "Entrar"}
-            </button>
-          </form>
 
           <p className="auth-footer">
             ¿Aún no tienes cuenta? <Link to="/register">Regístrate aquí</Link>

@@ -2,23 +2,27 @@ export function AboutPage() {
   const pilares = [
     {
       numero: "01",
-      titulo: "Infraestructura",
-      descripcion: "Reporta problemas en vías, alumbrado y espacios públicos.",
+      tema: "reports",
+      titulo: "Reportes",
+      descripcion: "Informa sobre daños y necesidades en espacios de la comunidad.",
     },
     {
       numero: "02",
-      titulo: "Salud y nutrición",
+      tema: "health",
+      titulo: "Salud",
       descripcion: "Organiza tus citas y acompaña tus hábitos de bienestar.",
     },
     {
       numero: "03",
-      titulo: "Control de medicamentos",
-      descripcion: "Lleva un mejor control de tus medicamentos y alertas.",
+      tema: "medicine",
+      titulo: "Botiquín",
+      descripcion: "Lleva el control de tus medicamentos y recibe alertas.",
     },
     {
       numero: "04",
-      titulo: "Trámites comunitarios",
-      descripcion: "Consulta el avance de tus solicitudes en un solo lugar.",
+      tema: "process",
+      titulo: "Trámites",
+      descripcion: "Consulta y sigue tus gestiones comunitarias en un solo lugar.",
     },
   ];
 
@@ -26,27 +30,32 @@ export function AboutPage() {
     {
       iniciales: "YR",
       nombre: "Yul Reyes Tapia",
-      area: "Arquitectura Base, Usuarios y Dashboard",
+      area: "Plataforma ciudadana",
+      tema: "platform",
     },
     {
       iniciales: "NS",
       nombre: "Nailea Soto Gonzalez",
-      area: "Infraestructura Cantonal y Especialistas",
+      area: "Reportes ciudadanos",
+      tema: "reports",
     },
     {
       iniciales: "EG",
       nombre: "Esmeralda Gonzalez Cordoba",
-      area: "Nutrición, Hidratación y Notificaciones",
+      area: "Salud y bienestar",
+      tema: "health",
     },
     {
       iniciales: "KU",
       nombre: "Kristel Ugalde Amador",
-      area: "Medicamentos, Emergencia y Farmacias",
+      area: "Botiquín y farmacias",
+      tema: "medicine",
     },
     {
       iniciales: "MM",
       nombre: "Maria Murillo Chaves",
-      area: "Historial de Tomas y Trámites",
+      area: "Trámites comunitarios",
+      tema: "process",
     },
   ];
 
@@ -55,19 +64,22 @@ export function AboutPage() {
       <section className="about-hero">
         <h1>Acerca de Costa Rica Conecta</h1>
         <p className="about-introduction">
-          Una plataforma para gestionar reportes ciudadanos, servicios de salud
-          y trámites comunitarios en todo Costa Rica.
+          Costa Rica Conecta acerca servicios útiles a las personas y facilita
+          la participación, el bienestar y el seguimiento de gestiones en cada
+          comunidad.
         </p>
       </section>
 
       <section className="about-section" aria-labelledby="pillars-heading">
         <div className="section-heading">
-          <h2 id="pillars-heading">Pilares del sistema</h2>
+          <h2 id="pillars-heading">Lo que ofrecemos</h2>
         </div>
         <div className="about-grid">
           {pilares.map((pilar) => (
             <article className="about-pillar-card" key={pilar.numero}>
-              <span className="pillar-number">{pilar.numero}</span>
+              <span className={`pillar-number theme-${pilar.tema}`}>
+                {pilar.numero}
+              </span>
               <h3>{pilar.titulo}</h3>
               <p>{pilar.descripcion}</p>
             </article>
@@ -82,11 +94,16 @@ export function AboutPage() {
         <div className="team-pills">
           {integrantes.map((integrante) => (
             <div className="team-pill" key={integrante.nombre}>
-              <span className="team-pill-avatar" aria-hidden="true">
+              <span
+                className={`team-pill-avatar theme-${integrante.tema}`}
+                aria-hidden="true"
+              >
                 {integrante.iniciales}
               </span>
               <span className="team-pill-name">{integrante.nombre}</span>
-              <span className="team-pill-area">{integrante.area}</span>
+              <span className={`team-pill-area theme-${integrante.tema}`}>
+                {integrante.area}
+              </span>
             </div>
           ))}
         </div>
