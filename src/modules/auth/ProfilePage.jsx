@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { updateProfile } from "firebase/auth";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 import { auth, db } from "../../config/firebaseConfig";
 import { subirImagen } from "../../shared/utils/storageHelper";
 import { useAuth } from "./AuthContext";
+import ConfirmDialog from "../../shared/components/ConfirmDialog";
 
 export function ProfilePage() {
-  const { user, userData, refreshUserData } = useAuth();
+  const { user, userData, refreshUserData, deleteAccount } = useAuth();
+  const navigate = useNavigate();
   const [nombre, setNombre] = useState("");
   const [telefono, setTelefono] = useState("");
   const [canton, setCanton] = useState("");
@@ -15,6 +18,9 @@ export function ProfilePage() {
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState("");
   const [guardando, setGuardando] = useState(false);
+  const [confirmarEliminacion, setConfirmarEliminacion] = useState(false);
+  const [eliminandoCuenta, setEliminandoCuenta] = useState(false);
+  const [errorEliminacion, setErrorEliminacion] = useState("");
 
   useEffect(() => {
     if (userData) {
@@ -25,8 +31,17 @@ export function ProfilePage() {
     }
   }, [userData, user]);
 
+  useEffect(
+    () => () => {
+      if (previewUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    },
+    [previewUrl],
+  );
+
   const handleSeleccionArchivo = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (file) {
       setArchivoFoto(file);
       setPreviewUrl(URL.createObjectURL(file));
@@ -40,6 +55,10 @@ export function ProfilePage() {
     setGuardando(true);
 
     try {
+      if (!user || !auth.currentUser) {
+        throw new Error("La sesión expiró. Inicia sesión nuevamente.");
+      }
+
       let urlFinalFoto = userData?.photoURL || user?.photoURL || "";
 
       if (archivoFoto) {
@@ -62,11 +81,36 @@ export function ProfilePage() {
 
       await refreshUserData();
       setArchivoFoto(null);
+      setPreviewUrl(urlFinalFoto);
       setMensaje("Perfil y fotografia actualizados correctamente.");
     } catch (err) {
       setError(err.message || "Error al actualizar los datos del perfil.");
     } finally {
       setGuardando(false);
+    }
+  };
+
+  const handleEliminarCuenta = async () => {
+    setErrorEliminacion("");
+    setEliminandoCuenta(true);
+
+    try {
+      await deleteAccount();
+      navigate("/login", { replace: true });
+    } catch (err) {
+      if (err.code === "auth/requires-recent-login") {
+        setErrorEliminacion(
+          "Por seguridad, cierra sesión, vuelve a ingresar y repite la eliminación para confirmar tu identidad.",
+        );
+      } else {
+        setErrorEliminacion(
+          `No se pudo eliminar la cuenta (${err.code || "error"}). Inténtalo nuevamente.`,
+        );
+      }
+
+      setConfirmarEliminacion(false);
+    } finally {
+      setEliminandoCuenta(false);
     }
   };
 
@@ -145,6 +189,48 @@ export function ProfilePage() {
           </button>
         </form>
       </div>
+
+      <section className="account-management" aria-labelledby="account-management-title">
+        <div>
+          <h2 id="account-management-title">Gestión de cuenta</h2>
+          <p>
+            La eliminación borra permanentemente tu perfil y tu acceso a la
+            plataforma.
+          </p>
+        </div>
+        {errorEliminacion && (
+          <div className="alert-error" role="alert">
+            {errorEliminacion}
+          </div>
+        )}
+        <button
+          type="button"
+          className="btn-danger"
+          onClick={() => {
+            setErrorEliminacion("");
+            setConfirmarEliminacion(true);
+          }}
+          disabled={eliminandoCuenta || guardando}
+        >
+          Eliminar mi cuenta
+        </button>
+      </section>
+
+      <ConfirmDialog
+        open={confirmarEliminacion}
+        title="Eliminar cuenta"
+        description="Se borrarán permanentemente tu perfil y tu acceso a Costa Rica Conecta. Esta acción no se puede deshacer."
+        confirmLabel={eliminandoCuenta ? "Eliminando cuenta..." : "Eliminar mi cuenta"}
+        cancelLabel="Conservar cuenta"
+        confirmDisabled={eliminandoCuenta}
+        danger
+        onConfirm={handleEliminarCuenta}
+        onCancel={() => {
+          if (!eliminandoCuenta) {
+            setConfirmarEliminacion(false);
+          }
+        }}
+      />
     </div>
   );
 }

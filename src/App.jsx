@@ -28,6 +28,24 @@ function ModuloEnDesarrollo({ titulo, responsable, descripcion }) {
   );
 }
 
+function GuestRoute({ children }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="loading-screen">
+        <p>Verificando sesion activa...</p>
+      </div>
+    );
+  }
+
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+}
+
 export function App() {
   return (
     <AuthProvider>
@@ -49,8 +67,22 @@ function AppLayout() {
       <Navbar />
       <main className="main-content">
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/login"
+            element={
+              <GuestRoute>
+                <LoginPage />
+              </GuestRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <GuestRoute>
+                <RegisterPage />
+              </GuestRoute>
+            }
+          />
 
           <Route
             path="/dashboard"

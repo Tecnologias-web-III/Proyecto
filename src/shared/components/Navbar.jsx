@@ -4,9 +4,9 @@ import { useAuth } from "../../modules/auth/AuthContext";
 
 const enlaces = [
   { to: "/dashboard", label: "Inicio", end: true },
-  { to: "/infraestructura", label: "Infraestructura" },
-  { to: "/nutricion", label: "Nutrición" },
-  { to: "/medicamentos", label: "Medicamentos" },
+  { to: "/infraestructura", label: "Reportes" },
+  { to: "/nutricion", label: "Salud" },
+  { to: "/medicamentos", label: "Botiquín" },
   { to: "/tramites", label: "Trámites" },
   { to: "/acerca-de", label: "Acerca de" },
 ];
@@ -16,9 +16,11 @@ export function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 
   useEffect(() => {
     setMenuOpen(false);
+    setAccountMenuOpen(false);
   }, [location.pathname]);
 
   if (!user) return null;
@@ -35,10 +37,7 @@ export function Navbar() {
     <header className={`navbar${menuOpen ? " menu-open" : ""}`}>
       <div className="navbar-inner">
         <Link to="/dashboard" className="navbar-brand" aria-label="Costa Rica Conecta, inicio">
-          <span className="brand-emblem" aria-hidden="true">
-            <span />
-            <span />
-          </span>
+          <img src="/img/Favicon.png" alt="" className="brand-logo" />
           <span>Costa Rica Conecta</span>
         </Link>
 
@@ -75,10 +74,13 @@ export function Navbar() {
         </nav>
 
         <div className="navbar-user">
-          <Link
-            to="/perfil"
+          <button
+            type="button"
             className="navbar-profile"
-            aria-label={`Ver perfil de ${nombre}`}
+            aria-label="Abrir menú de usuario"
+            aria-expanded={accountMenuOpen}
+            aria-haspopup="menu"
+            onClick={() => setAccountMenuOpen((isOpen) => !isOpen)}
           >
             {photoURL ? (
               <img src={photoURL} alt="" className="navbar-avatar" />
@@ -87,16 +89,23 @@ export function Navbar() {
                 {nombre.charAt(0).toUpperCase()}
               </span>
             )}
-          </Link>
-          <span className="user-name">{nombre}</span>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="btn-logout"
-            aria-label="Cerrar sesión"
-          >
-            Salir
           </button>
+          <span className="user-name">{nombre}</span>
+          {accountMenuOpen && (
+            <div className="navbar-account-menu" role="menu">
+              <Link to="/perfil" role="menuitem">
+                Mi perfil
+              </Link>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="btn-logout"
+                role="menuitem"
+              >
+                Salir
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

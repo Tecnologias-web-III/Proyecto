@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 
 const enlaces = [
   { to: "/dashboard", label: "Inicio" },
-  { to: "/infraestructura", label: "Infraestructura" },
-  { to: "/nutricion", label: "Nutrición" },
-  { to: "/medicamentos", label: "Medicamentos" },
+  { to: "/infraestructura", label: "Reportes" },
+  { to: "/nutricion", label: "Salud" },
+  { to: "/medicamentos", label: "Botiquín" },
   { to: "/tramites", label: "Trámites" },
   { to: "/acerca-de", label: "Acerca de" },
 ];
@@ -15,16 +15,12 @@ export function Footer() {
       <div className="footer-grid">
         <section className="footer-column">
           <Link to="/dashboard" className="footer-brand">
-            <span className="brand-emblem" aria-hidden="true">
-              <span />
-              <span />
-            </span>
+            <img src="/img/Favicon.png" alt="" className="brand-logo" />
             <span>Costa Rica Conecta</span>
           </Link>
           <p>
-            Una plataforma para conectar a las comunidades con reportes de
-            infraestructura cantonal, seguimiento nutricional y control de
-            medicamentos.
+            Servicios para participar, cuidar el bienestar y dar seguimiento a
+            las gestiones de tu comunidad.
           </p>
         </section>
 
@@ -40,15 +36,12 @@ export function Footer() {
         </nav>
 
         <section className="footer-column">
-          <h2>Información institucional</h2>
-          <p>Universidad Técnica Nacional</p>
-          <p>Sede del Pacífico</p>
-          <p>Ingeniería en Tecnologías de la Información</p>
-          <p>Cuatrimestre IIIC 2026</p>
+          <h2>Conecta con tu comunidad</h2>
+          <p>Reportes ciudadanos, salud, botiquín y trámites en un solo lugar.</p>
         </section>
       </div>
       <div className="footer-bottom">
-        <p>2026 · Costa Rica Conecta · Proyecto académico comunitario.</p>
+        <p>Costa Rica Conecta · Servicios y bienestar para tu comunidad.</p>
       </div>
     </footer>
   );

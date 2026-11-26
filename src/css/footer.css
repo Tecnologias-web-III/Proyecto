@@ -1,0 +1,87 @@
+.site-footer {
+  margin-top: auto;
+  color: #f1f5f9;
+  background: #0f3d5e;
+}
+
+.footer-grid {
+  width: min(100%, 1320px);
+  margin: 0 auto;
+  padding: 2.75rem 1.5rem;
+  gap: 2rem;
+}
+
+.footer-column {
+  min-width: 0;
+}
+
+.footer-brand {
+  margin-bottom: 1rem;
+  color: #f1f5f9;
+}
+
+.footer-brand .brand-logo {
+  padding: 3px;
+  background: #ffffff;
+}
+
+.footer-column h2 {
+  margin-bottom: 0.85rem;
+  color: #f1f5f9;
+  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.auth-title-block h1 {
+  font-size: clamp(1.65rem, 2.4vw, 2rem);
+}
+
+.auth-carousel-content h2 {
+  font-size: clamp(1.25rem, 2.5vw, 1.85rem);
+}
+
+.footer-column p,
+.footer-column li {
+  color: #cbd5e1;
+  font-size: 0.88rem;
+}
+
+.footer-column p + p {
+  margin-top: 0.35rem;
+}
+
+.footer-navigation ul {
+  display: grid;
+  gap: 0.35rem;
+  list-style: none;
+}
+
+.footer-navigation a {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-navigation a:hover {
+  color: #6ee7b7;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer-bottom {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(203, 213, 225, 0.2);
+  text-align: center;
+}
+
+.footer-bottom p {
+  color: #cbd5e1;
+  font-size: 0.8rem;
+}
+
+.about-card,
+.overview-item,
