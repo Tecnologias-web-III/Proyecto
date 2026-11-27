@@ -115,7 +115,7 @@ export function ProfilePage() {
   };
 
   return (
-    <div className="page-container">
+    <div className="page-container profile-page">
       <div className="page-header">
         <h2>Perfil de Usuario</h2>
         <p>Administra tu información personal y tu foto de perfil.</p>
