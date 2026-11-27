@@ -4,11 +4,11 @@ import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../../config/firebaseConfig";
 import { subirImagen } from "../../shared/utils/storageHelper";
-import { useAuth } from "./AuthContext";
+import { useAuth, verificarUltimaCuentaInstitucional } from "./AuthContext";
 import ConfirmDialog from "../../shared/components/ConfirmDialog";
 
 export function ProfilePage() {
-  const { user, userData, refreshUserData, deleteAccount } = useAuth();
+  const { user, userData, rol, nombreEnte, refreshUserData, deleteAccount } = useAuth();
   const navigate = useNavigate();
   const [nombre, setNombre] = useState("");
   const [telefono, setTelefono] = useState("");
@@ -95,6 +95,7 @@ export function ProfilePage() {
     setEliminandoCuenta(true);
 
     try {
+      await verificarUltimaCuentaInstitucional(rol);
       await deleteAccount();
       navigate("/login", { replace: true });
     } catch (err) {
@@ -102,9 +103,13 @@ export function ProfilePage() {
         setErrorEliminacion(
           "Por seguridad, cierra sesión, vuelve a ingresar y repite la eliminación para confirmar tu identidad.",
         );
+      } else if (err.message?.includes("debe existir al menos otro usuario activo")) {
+        setErrorEliminacion(err.message);
       } else {
         setErrorEliminacion(
-          `No se pudo eliminar la cuenta (${err.code || "error"}). Inténtalo nuevamente.`,
+          err.code
+            ? `No se pudo eliminar la cuenta (${err.code}). Inténtalo nuevamente.`
+            : err.message || "No se pudo eliminar la cuenta. Inténtalo nuevamente.",
         );
       }
 
@@ -133,7 +138,7 @@ export function ProfilePage() {
           <div>
             <h3>{nombre || "Usuario"}</h3>
             <p className="text-muted">{user?.email}</p>
-            <span className="badge-role">{userData?.rol || "Ciudadano"}</span>
+            <span className="badge-role">{nombreEnte}</span>
           </div>
         </div>
 

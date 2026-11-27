@@ -1,18 +1,38 @@
 import {
-  collection, doc, onSnapshot, query, runTransaction, serverTimestamp, setDoc, where,
+  Timestamp, collection, doc, onSnapshot, query, runTransaction, serverTimestamp, setDoc, where,
 } from "firebase/firestore";
 import { db } from "../../config/firebaseConfig";
 
 export const areas = ["Infraestructura", "Nutrición", "Farmacia"];
 export const prioridades = ["Baja", "Media", "Alta"];
-export const estados = ["Registrada", "En Atención", "Resuelta", "Cerrada"];
+export const estados = ["Registrada", "En Revisión", "En Atención", "Resuelta", "Cerrada"];
 export const transiciones = {
-  Registrada: ["En Atención"],
+  Registrada: ["En Revisión", "En Atención"],
+  "En Revisión": ["En Atención", "Resuelta", "Cerrada"],
   "En Atención": ["Resuelta", "Cerrada"],
   Resuelta: [],
   Cerrada: [],
 };
-export const clavesHistorial = { "En Atención": "enAtencion", Resuelta: "resuelta", Cerrada: "cerrada" };
+export const clavesHistorial = {
+  "En Revisión": "enAtencion",
+  "En Atención": "enAtencion",
+  Resuelta: "resuelta",
+  Cerrada: "cerrada",
+};
+
+export function historialComoArray(historial) {
+  const entradas = Array.isArray(historial)
+    ? historial
+    : Object.values(historial || {});
+
+  return entradas
+    .filter((entrada) => entrada && typeof entrada === "object")
+    .map((entrada) => ({
+      ...entrada,
+      autor: entrada.autor || "Usuario",
+      rolEnte: entrada.rolEnte || "Institución",
+    }));
+}
 
 export const coleccionesPorArea = {
   Infraestructura: "reportes_infraestructura",
@@ -74,9 +94,18 @@ export async function cambiarEstado(id, uid, estadoAnterior, estado, observacion
     transaction.update(referencia, {
       estado,
       actualizadoEn: serverTimestamp(),
-      [`historial.${clavesHistorial[estado]}`]: {
-        estado, observacion: texto, fecha: serverTimestamp(), userId: uid,
-      },
+      historial: [
+        ...historialComoArray(datos.historial),
+        {
+          estado,
+          observacion: texto,
+          fecha: Timestamp.now(),
+          userId: uid,
+          autor: "Usuario ciudadano",
+          rolEnte: "ciudadano",
+          evidenciaUrl: datos.evidenciaUrl || "",
+        },
+      ],
     });
   });
 }

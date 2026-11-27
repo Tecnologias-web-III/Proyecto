@@ -9,16 +9,52 @@ import {
 import {
   deleteDoc,
   doc,
+  collection,
   getDoc,
+  getDocs,
+  onSnapshot,
+  query,
   setDoc,
   serverTimestamp,
+  where,
 } from "firebase/firestore";
 import { auth, db } from "../../config/firebaseConfig";
 
 const AuthContext = createContext(null);
 const SESSION_TIMEOUT_MS = 15 * 60 * 1000;
 const ACTIVITY_STORAGE_PREFIX = "auth:last-activity:";
+const ROLES = new Set([
+  "ciudadano",
+  "admin_municipal",
+  "admin_salud",
+  "admin_farmacia",
+]);
+const ROLES_ADMIN = new Set(["admin_municipal", "admin_salud", "admin_farmacia"]);
+const NOMBRES_ENTE = {
+  ciudadano: "Ciudadano",
+  admin_municipal: "Municipalidad Cantonal",
+  admin_salud: "Centro de Salud",
+  admin_farmacia: "Farmacia Comunitaria",
+};
 let persistencePromise;
+
+function normalizarRol(rol) {
+  const valor = typeof rol === "string" ? rol.trim().toLowerCase() : "";
+  return ROLES.has(valor) ? valor : "ciudadano";
+}
+
+export async function verificarUltimaCuentaInstitucional(rol) {
+  if (!ROLES_ADMIN.has(rol)) return;
+
+  const cuentas = await getDocs(
+    query(collection(db, "usuarios"), where("rol", "==", rol)),
+  );
+  if (cuentas.size <= 1) {
+    throw new Error(
+      "No se puede eliminar esta cuenta: debe existir al menos otro usuario activo con el mismo rol institucional en la plataforma.",
+    );
+  }
+}
 
 function asegurarPersistenciaLocal() {
   if (!persistencePromise) {
@@ -52,7 +88,7 @@ export function AuthProvider({ children }) {
         telefono: "",
         canton: "Orotina",
         photoURL: firebaseUser.photoURL || "",
-        rol: "Ciudadano",
+        rol: "ciudadano",
         creadoEn: serverTimestamp(),
       };
       await setDoc(userRef, nuevoPerfil);
@@ -62,6 +98,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let unsubscribe;
+    let unsubscribePerfil;
     let cancelled = false;
     let lastObservedUid = null;
 
@@ -71,13 +108,22 @@ export function AuthProvider({ children }) {
           localStorage.removeItem(`${ACTIVITY_STORAGE_PREFIX}${lastObservedUid}`);
         }
         lastObservedUid = currentUser?.uid || null;
+        unsubscribePerfil?.();
+        unsubscribePerfil = null;
         setUser(currentUser);
         try {
           await cargarPerfilFirestore(currentUser);
+          if (!cancelled && currentUser && auth.currentUser?.uid === currentUser.uid) {
+            unsubscribePerfil = onSnapshot(
+              doc(db, "usuarios", currentUser.uid),
+              (snapshot) => setUserData(snapshot.exists() ? snapshot.data() : null),
+              (error) => console.error("Error al escuchar el perfil:", error),
+            );
+          }
         } catch (error) {
           console.error("Error al sincronizar perfil:", error);
         } finally {
-          setLoading(false);
+          if (!cancelled) setLoading(false);
         }
       });
 
@@ -94,6 +140,7 @@ export function AuthProvider({ children }) {
     return () => {
       cancelled = true;
       unsubscribe?.();
+      unsubscribePerfil?.();
     };
   }, []);
 
@@ -207,6 +254,8 @@ export function AuthProvider({ children }) {
 
     const userRef = doc(db, "usuarios", currentUser.uid);
     const userSnap = await getDoc(userRef);
+    const rolActual = normalizarRol(userSnap.exists() ? userSnap.data().rol : "ciudadano");
+    await verificarUltimaCuentaInstitucional(rolActual);
     if (userSnap.exists()) {
       await deleteDoc(userRef);
     }
@@ -229,9 +278,23 @@ export function AuthProvider({ children }) {
     setUserData(null);
   };
 
+  const rol = normalizarRol(userData?.rol);
+  const esAdmin = ROLES_ADMIN.has(rol);
+  const nombreEnte = NOMBRES_ENTE[rol];
+
   return (
     <AuthContext.Provider
-      value={{ user, userData, loading, logout, refreshUserData, deleteAccount }}
+      value={{
+        user,
+        userData,
+        rol,
+        esAdmin,
+        nombreEnte,
+        loading,
+        logout,
+        refreshUserData,
+        deleteAccount,
+      }}
     >
       {children}
     </AuthContext.Provider>

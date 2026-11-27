@@ -159,7 +159,7 @@ const datosIniciales = {
 };
 
 export function DashboardPage() {
-  const { user, userData } = useAuth();
+  const { user, userData, esAdmin, nombreEnte } = useAuth();
   const [datos, setDatos] = useState(datosIniciales);
   const [errores, setErrores] = useState({});
 
@@ -321,19 +321,25 @@ export function DashboardPage() {
     <div className="page-container dashboard-page">
       <section className="dashboard-hero">
         <div className="hero-copy">
+          <span className="eyebrow">
+            {esAdmin ? nombreEnte : "Portal Ciudadano"}
+          </span>
           <h1>
             Bienvenido/a, {userData?.nombre || user?.displayName || "Ciudadano"}
           </h1>
           <p>
-            Conecta con los servicios de tu comunidad, cuida tu bienestar y da
-            seguimiento a tus gestiones en un solo lugar.
+            Conecta con los servicios de tu comunidad y da seguimiento a tus
+            gestiones en un solo lugar.
           </p>
           <div className="hero-actions">
             <a href="#modules" className="btn-primary">
               Explorar servicios
             </a>
-            <Link to="/perfil" className="btn-secondary">
-              Mi perfil
+            <Link
+              to={esAdmin ? "/admin" : "/perfil"}
+              className="btn-secondary hero-secondary-button"
+            >
+              {esAdmin ? "Gestión Institucional" : "Mi perfil"}
             </Link>
           </div>
         </div>

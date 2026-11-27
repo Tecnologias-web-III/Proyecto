@@ -126,3 +126,29 @@
 .tramites-historial li + li {
   margin-top: 0.75rem;
 }
+
+.tramites-auditoria-autor {
+  color: var(--text-muted);
+  font-size: 0.86rem;
+}
+
+.tramites-evidencia {
+  display: grid;
+  justify-items: start;
+  gap: 0.35rem;
+  width: fit-content;
+  margin-top: 0.5rem;
+  color: var(--secondary-dark);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.tramites-evidencia img {
+  display: block;
+  width: min(100%, 360px);
+  max-height: 260px;
+  object-fit: contain;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-tint);
+}
