@@ -1,62 +1,47 @@
-import { useEffect, useState } from "react";
-import { collection, getDocsFromServer, query, where } from "firebase/firestore";
-import { db } from "../../config/firebaseConfig";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { codigoVisible } from "./comprobanteTramite";
+import { areas, estados } from "./tramitesData";
+import { useGestionTramites } from "./useGestionTramites";
+import { useRegistrosTramites } from "./useRegistrosTramites";
+import TramitesPdfView from "./TramitesPdfView";
 import "./tramites.css";
-
-const areas = ["Infraestructura", "Nutrición", "Farmacia"];
-const estados = ["Registrada", "En Atención", "Resuelta", "Cerrada"];
 
 export default function TramitesListPage() {
   const { user } = useAuth();
   const [area, setArea] = useState("");
   const [estado, setEstado] = useState("");
-  const [consulta, setConsulta] = useState(null);
-  const uid = user?.uid;
-
-  useEffect(() => {
-    if (!uid) return;
-
-    let activa = true;
-    const solicitudes = query(
-      collection(db, "tramites_comunidad"),
-      where("userId", "==", uid),
-    );
-
-    getDocsFromServer(solicitudes)
-      .then((snapshot) => {
-        if (!activa) return;
-        const registros = snapshot.docs.map((documento) => ({
-          ...documento.data(),
-          id: documento.id,
-        }));
-        setConsulta({ uid, registros, error: false });
-      })
-      .catch(() => {
-        if (activa) setConsulta({ uid, registros: [], error: true });
-      });
-
-    return () => {
-      activa = false;
-    };
-  }, [uid]);
-
-  const consultaActual = consulta?.uid === uid ? consulta : null;
-  const registros = consultaActual?.registros ?? [];
+  const gestor = useGestionTramites(user);
+  const [ambito, setAmbito] = useState("propios");
+  const todos = Boolean(gestor && ambito === "todos");
+  const { registros, cargando, error } = useRegistrosTramites("tramites_comunidad", user.uid, todos);
 
   const tramites = registros.filter(
     (tramite) => (!area || tramite.area === area) && (!estado || tramite.estado === estado),
-  );
+  ).sort((a, b) => (b.creadoEn?.seconds ?? 0) - (a.creadoEn?.seconds ?? 0));
 
   return (
     <section className="page-container tramites-page">
       <header className="page-header">
         <h1>Trámites comunitarios</h1>
         <p>Consulta tus solicitudes por área y estado.</p>
+        <div className="tramites-acciones">
+          <Link className="btn-primary" to="/tramites/nuevo">Registrar trámite</Link>
+        </div>
       </header>
 
-      <div className="placeholder-card">
+      <section className="placeholder-card tramites-bloque" aria-labelledby="tramites-reporte">
+        <h2 id="tramites-reporte">Reporte de trámites</h2>
         <div className="tramites-filtros">
+          {gestor && (
+            <label>Ámbito
+              <select value={ambito} onChange={(event) => setAmbito(event.target.value)}>
+                <option value="propios">Mis trámites</option>
+                <option value="todos">Todos los trámites</option>
+              </select>
+            </label>
+          )}
           <label>
             Área
             <select value={area} onChange={(event) => setArea(event.target.value)}>
@@ -73,16 +58,16 @@ export default function TramitesListPage() {
           </label>
         </div>
 
-        {!consultaActual && (
+        {cargando && (
           <p className="tramites-resultados" role="status">Cargando trámites…</p>
         )}
-        {consultaActual?.error && (
+        {error && (
           <p className="tramites-resultados" role="alert">No se pudieron cargar los trámites. Vuelve a intentar recargando la página.</p>
         )}
-        {consultaActual && !consultaActual.error && (
+        {!cargando && !error && (
           <p className="tramites-resultados" role="status">
             {registros.length === 0
-              ? "Todavía no tienes trámites registrados."
+              ? (todos ? "No hay trámites registrados." : "Todavía no tienes trámites registrados.")
               : tramites.length === 0
                 ? "No hay trámites que coincidan con los filtros seleccionados."
                 : tramites.length === 1
@@ -105,7 +90,9 @@ export default function TramitesListPage() {
               <tbody>
                 {tramites.map((tramite) => (
                   <tr key={tramite.id}>
-                    <td>{tramite.codigo}</td>
+                    <td><Link to={`/tramites/${tramite.id}`}>
+                      {codigoVisible(tramite.codigo || tramite.id)}
+                    </Link></td>
                     <td>{tramite.descripcion}</td>
                     <td>{tramite.area}</td>
                     <td>{tramite.prioridad}</td>
@@ -116,7 +103,12 @@ export default function TramitesListPage() {
             </table>
           </div>
         )}
-      </div>
+        {!cargando && !error && (
+          <div className="tramites-acciones">
+            <TramitesPdfView tramites={tramites} area={area} estado={estado} />
+          </div>
+        )}
+      </section>
     </section>
   );
 }

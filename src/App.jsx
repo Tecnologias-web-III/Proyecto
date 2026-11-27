@@ -1,5 +1,6 @@
 import {
   BrowserRouter,
+  Link,
   Routes,
   Route,
   Navigate,
@@ -13,16 +14,20 @@ import { ProfilePage } from "./modules/auth/ProfilePage";
 import { DashboardPage } from "./modules/dashboard/DashboardPage";
 import { AboutPage } from "./modules/dashboard/AboutPage";
 import TramitesListPage from "./modules/tramites/TramitesListPage";
+import TramiteFormPage from "./modules/tramites/TramiteFormPage";
+import TramiteDetailPage from "./modules/tramites/TramiteDetailPage";
+import HistorialTomasPage from "./modules/tramites/HistorialTomasPage";
 import { Navbar } from "./shared/components/Navbar";
 import { Footer } from "./shared/components/Footer";
 
-function ModuloEnDesarrollo({ titulo, responsable, descripcion }) {
+function ModuloEnDesarrollo({ titulo, responsable, descripcion, children }) {
   return (
     <div className="page-container">
       <div className="placeholder-card">
         <span className="badge-institucional">{responsable}</span>
         <h2>{titulo}</h2>
         <p>{descripcion}</p>
+        {children}
       </div>
     </div>
   );
@@ -141,7 +146,9 @@ function AppLayout() {
                   titulo="Módulo de Inventario de Medicamentos y Farmacias (MedicApp)"
                   responsable="Asignado a Perfil 4"
                   descripcion="Botiquín personal con alertas de stock bajo, tarjeta digital de emergencia médica y mapa interactivo de farmacias."
-                />
+                >
+                  <Link to="/medicamentos/historial">Historial de tomas</Link>
+                </ModuloEnDesarrollo>
               </ProtectedRoute>
             }
           />
@@ -153,6 +160,9 @@ function AppLayout() {
               </ProtectedRoute>
             }
           />
+          <Route path="/tramites/nuevo" element={<ProtectedRoute><TramiteFormPage /></ProtectedRoute>} />
+          <Route path="/tramites/:tramiteId" element={<ProtectedRoute><TramiteDetailPage /></ProtectedRoute>} />
+          <Route path="/medicamentos/historial" element={<ProtectedRoute><HistorialTomasPage /></ProtectedRoute>} />
 
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
