@@ -16,6 +16,8 @@ import {
 import { auth, db } from "../../config/firebaseConfig";
 
 const AuthContext = createContext(null);
+const SESSION_TIMEOUT_MS = 15 * 60 * 1000;
+const ACTIVITY_STORAGE_PREFIX = "auth:last-activity:";
 let persistencePromise;
 
 function asegurarPersistenciaLocal() {
@@ -61,9 +63,14 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     let unsubscribe;
     let cancelled = false;
+    let lastObservedUid = null;
 
     const escucharCambiosDeAutenticacion = () =>
       onAuthStateChanged(auth, async (currentUser) => {
+        if (lastObservedUid && lastObservedUid !== currentUser?.uid) {
+          localStorage.removeItem(`${ACTIVITY_STORAGE_PREFIX}${lastObservedUid}`);
+        }
+        lastObservedUid = currentUser?.uid || null;
         setUser(currentUser);
         try {
           await cargarPerfilFirestore(currentUser);
@@ -90,6 +97,93 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!user) {
+      return undefined;
+    }
+
+    const activityKey = `${ACTIVITY_STORAGE_PREFIX}${user.uid}`;
+    const savedActivity = Number(localStorage.getItem(activityKey));
+    let lastActivity =
+      Number.isFinite(savedActivity) && savedActivity > 0
+        ? Math.min(savedActivity, Date.now())
+        : Date.now();
+    let lastActivityWrite = lastActivity;
+    let timeoutId;
+
+    const signOutAfterInactivity = () => {
+      const savedTimestamp = Number(localStorage.getItem(activityKey));
+      if (Number.isFinite(savedTimestamp) && savedTimestamp > lastActivity) {
+        lastActivity = savedTimestamp;
+      }
+
+      const remainingTime = SESSION_TIMEOUT_MS - (Date.now() - lastActivity);
+      if (remainingTime <= 0) {
+        localStorage.removeItem(activityKey);
+        signOut(auth).catch((error) => {
+          console.error("Error al cerrar la sesión inactiva:", error);
+        });
+        return;
+      }
+
+      timeoutId = window.setTimeout(signOutAfterInactivity, remainingTime);
+    };
+
+    const recordActivity = () => {
+      lastActivity = Date.now();
+      if (lastActivity - lastActivityWrite >= 1000) {
+        localStorage.setItem(activityKey, String(lastActivity));
+        lastActivityWrite = lastActivity;
+      }
+      window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(signOutAfterInactivity, SESSION_TIMEOUT_MS);
+    };
+
+    const syncActivity = (event) => {
+      if (event.key !== activityKey || !event.newValue) {
+        return;
+      }
+
+      const savedTimestamp = Number(event.newValue);
+      if (Number.isFinite(savedTimestamp) && savedTimestamp > lastActivity) {
+        lastActivity = savedTimestamp;
+        lastActivityWrite = savedTimestamp;
+        window.clearTimeout(timeoutId);
+        timeoutId = window.setTimeout(
+          signOutAfterInactivity,
+          Math.max(0, SESSION_TIMEOUT_MS - (Date.now() - lastActivity)),
+        );
+      }
+    };
+
+    if (Date.now() - lastActivity >= SESSION_TIMEOUT_MS) {
+      signOutAfterInactivity();
+    } else {
+      localStorage.setItem(activityKey, String(lastActivity));
+      timeoutId = window.setTimeout(
+        signOutAfterInactivity,
+        SESSION_TIMEOUT_MS - (Date.now() - lastActivity),
+      );
+    }
+
+    window.addEventListener("pointerdown", recordActivity);
+    window.addEventListener("pointermove", recordActivity);
+    window.addEventListener("keydown", recordActivity);
+    window.addEventListener("touchstart", recordActivity);
+    window.addEventListener("scroll", recordActivity);
+    window.addEventListener("storage", syncActivity);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.removeEventListener("pointerdown", recordActivity);
+      window.removeEventListener("pointermove", recordActivity);
+      window.removeEventListener("keydown", recordActivity);
+      window.removeEventListener("touchstart", recordActivity);
+      window.removeEventListener("scroll", recordActivity);
+      window.removeEventListener("storage", syncActivity);
+    };
+  }, [user]);
+
   const refreshUserData = async () => {
     if (auth.currentUser) {
       await cargarPerfilFirestore(auth.currentUser);
@@ -98,6 +192,9 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     await signOut(auth);
+    if (user) {
+      localStorage.removeItem(`${ACTIVITY_STORAGE_PREFIX}${user.uid}`);
+    }
     setUser(null);
     setUserData(null);
   };

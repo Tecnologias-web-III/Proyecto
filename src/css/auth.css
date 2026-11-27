@@ -1,4 +1,3 @@
-/* Layout dividido para Login y Registro con Carrusel */
 .auth-split-layout {
   position: relative;
   display: flex;
@@ -145,6 +144,10 @@
     var(--secondary) 100%
   );
   content: "";
+}
+
+.login-page .auth-form-box::before {
+  display: none;
 }
 
 .login-page .auth-form-box {
