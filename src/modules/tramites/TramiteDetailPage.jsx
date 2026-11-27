@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { ExternalLink, FileText } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import { cargarFavicon, codigoVisible, crearComprobante } from "./comprobanteTramite";
-import { cambiarEstado, clavesHistorial, mostrarFecha, observarTramite, transiciones } from "./tramitesData";
+import { cambiarEstado, historialComoArray, mostrarFecha, observarTramite, transiciones } from "./tramitesData";
 import { useGestionTramites } from "./useGestionTramites";
 import "./tramites.css";
 
@@ -38,9 +38,12 @@ function Detalle({ id, uid, gestor }) {
   const autorizado = tramite && (tramite.userId === uid || gestor);
   const opciones = transiciones[tramite?.estado] ?? [];
   const referencia = tramite?.codigo || id;
-  const historial = Object.values(clavesHistorial)
-    .map((clave) => tramite?.historial?.[clave])
-    .filter(Boolean);
+  const historial = historialComoArray(tramite?.historial)
+    .sort((a, b) => {
+      const fechaA = a.fecha?.toDate ? a.fecha.toDate().getTime() : new Date(a.fecha || 0).getTime();
+      const fechaB = b.fecha?.toDate ? b.fecha.toDate().getTime() : new Date(b.fecha || 0).getTime();
+      return fechaA - fechaB;
+    });
 
   async function verComprobante() {
     setErrorPdf(false);
@@ -116,6 +119,17 @@ function Detalle({ id, uid, gestor }) {
               {tramite.registroId && <div><dt>Registro vinculado</dt><dd>{tramite.registroId}</dd></div>}
             </dl>
             <p className="tramites-descripcion">{tramite.descripcion}</p>
+            {tramite.evidenciaUrl && (
+              <a
+                className="tramites-evidencia"
+                href={tramite.evidenciaUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img src={tramite.evidenciaUrl} alt="Evidencia fotográfica del trámite" />
+                <span>Ver evidencia del ente responsable</span>
+              </a>
+            )}
             <div className="tramites-acciones">
               <button type="button" className="btn-primary tramites-comprobante" onClick={verComprobante} disabled={abriendoPdf}
                 aria-label="Ver PDF del comprobante en otra pestaña">
@@ -137,7 +151,23 @@ function Detalle({ id, uid, gestor }) {
               {historial.map((cambio, indice) => (
                 <li key={indice}>
                   <strong>{cambio.estado}</strong> · {mostrarFecha(cambio.fecha)}
+                  {(cambio.autor || cambio.rolEnte) && (
+                    <p className="tramites-auditoria-autor">
+                      {cambio.autor || "Institución"}{cambio.rolEnte ? ` · ${cambio.rolEnte}` : ""}
+                    </p>
+                  )}
                   <p className="tramites-descripcion">{cambio.observacion}</p>
+                  {cambio.evidenciaUrl && (
+                    <a
+                      className="tramites-evidencia"
+                      href={cambio.evidenciaUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <img src={cambio.evidenciaUrl} alt={`Evidencia de ${cambio.estado}`} />
+                      <span>Ver evidencia</span>
+                    </a>
+                  )}
                 </li>
               ))}
             </ol>

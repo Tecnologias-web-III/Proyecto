@@ -27,7 +27,7 @@ export function LoginPage() {
         telefono: "",
         canton: "Orotina",
         photoURL: firebaseUser.photoURL || "",
-        rol: "Ciudadano",
+        rol: "ciudadano",
         creadoEn: serverTimestamp(),
       });
     }

@@ -146,13 +146,41 @@
   top: calc(100% + 0.65rem);
   right: 0;
   display: grid;
-  min-width: 170px;
+  min-width: 230px;
   gap: 0.2rem;
   padding: 0.45rem;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--surface);
   box-shadow: var(--shadow-card);
+}
+
+.navbar-account-summary {
+  display: grid;
+  gap: 0.18rem;
+  padding: 0.65rem 0.7rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.navbar-account-summary strong {
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
+.navbar-account-summary > span {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.navbar-account-summary .navbar-role-label {
+  width: fit-content;
+  margin-top: 0.25rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  color: var(--secondary-dark);
+  background: var(--secondary-soft);
+  font-weight: 700;
 }
 
 .navbar-account-menu a,

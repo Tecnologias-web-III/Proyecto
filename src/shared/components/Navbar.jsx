@@ -12,7 +12,7 @@ const enlaces = [
 ];
 
 export function Navbar() {
-  const { user, userData, logout } = useAuth();
+  const { user, userData, esAdmin, nombreEnte, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,6 +27,9 @@ export function Navbar() {
 
   const nombre = userData?.nombre || user.displayName || user.email || "Ciudadano";
   const photoURL = userData?.photoURL || user.photoURL;
+  const enlacesVisibles = esAdmin
+    ? [...enlaces, { to: "/admin", label: "Gestión Institucional" }]
+    : enlaces;
 
   const handleLogout = async () => {
     await logout();
@@ -59,7 +62,7 @@ export function Navbar() {
           id="primary-navigation"
           aria-label="Navegación principal"
         >
-          {enlaces.map(({ to, label, end }) => (
+          {enlacesVisibles.map(({ to, label, end }) => (
             <NavLink
               key={to}
               to={to}
@@ -93,6 +96,11 @@ export function Navbar() {
           <span className="user-name">{nombre}</span>
           {accountMenuOpen && (
             <div className="navbar-account-menu" role="menu">
+              <div className="navbar-account-summary">
+                <strong>{nombre}</strong>
+                <span>{user.email}</span>
+                <span className="navbar-role-label">{nombreEnte}</span>
+              </div>
               <Link to="/perfil" role="menuitem">
                 Mi perfil
               </Link>

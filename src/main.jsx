@@ -11,6 +11,7 @@ import "./css/dashboard.css";
 import "./css/about.css";
 import "./css/footer.css";
 import "./css/profile.css";
+import "./css/admin.css";
 import "./css/responsive.css";
 
 createRoot(document.getElementById("root")).render(

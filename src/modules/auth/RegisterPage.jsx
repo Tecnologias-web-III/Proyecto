@@ -54,7 +54,7 @@ export function RegisterPage() {
         telefono,
         canton,
         photoURL: "",
-        rol: "Ciudadano",
+        rol: "ciudadano",
         creadoEn: serverTimestamp(),
       });
 
@@ -89,7 +89,7 @@ export function RegisterPage() {
           telefono: "",
           canton: canton || "Orotina",
           photoURL: resultado.user.photoURL || "",
-          rol: "Ciudadano",
+          rol: "ciudadano",
           creadoEn: serverTimestamp(),
         });
       }

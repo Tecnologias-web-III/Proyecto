@@ -13,6 +13,7 @@ import { RegisterPage } from "./modules/auth/RegisterPage";
 import { ProfilePage } from "./modules/auth/ProfilePage";
 import { DashboardPage } from "./modules/dashboard/DashboardPage";
 import { AboutPage } from "./modules/dashboard/AboutPage";
+import { AdminPanelPage } from "./modules/dashboard/AdminPanelPage";
 import TramitesListPage from "./modules/tramites/TramitesListPage";
 import TramiteFormPage from "./modules/tramites/TramiteFormPage";
 import TramiteDetailPage from "./modules/tramites/TramiteDetailPage";
@@ -102,6 +103,14 @@ function AppLayout() {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute soloAdmin={true}>
+                <AdminPanelPage />
               </ProtectedRoute>
             }
           />
